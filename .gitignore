@@ -1,0 +1,15 @@
+# Generated model files
+Models/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+# Datasets
+Datasets/Amazon_RAW.csv
+Datasets/Amazon_cleaned_dataset.csv
+
+# Models
+Models/*.pkl
