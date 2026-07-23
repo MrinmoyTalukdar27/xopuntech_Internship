@@ -1,9 +1,11 @@
 """A compact Streamlit interface for the Amazon product recommender."""
 
+# Standard-library helpers for file paths, safe HTML, and SVG image encoding.
 from pathlib import Path
 from urllib.parse import quote
 import html
 
+# Third-party libraries used for data handling, model loading, and the web UI.
 import joblib
 import numpy as np
 import pandas as pd
@@ -12,12 +14,15 @@ import streamlit as st
 
 st.set_page_config(page_title="Product Recommender", page_icon="◆", layout="wide")
 
+# Resolve all project paths from this file, so the app works no matter where the
+# `streamlit run` command is issued from.
 APP_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = APP_DIR.parent
 DATA_PATH = PROJECT_DIR / "Datasets" / "Amazon_feature_dataset.csv"
 MODEL_PATH = PROJECT_DIR / "Models" / "knn_model.pkl"
 HOME_HERO_IMAGE_PATH = APP_DIR / "assets" / "home-page-hero.png"
 PROJECT_PAGE_IMAGE_PATH = APP_DIR / "assets" / "project-page-visual.png"
+# Inline SVG shown whenever an external product image URL is missing or blocked.
 PLACEHOLDER_IMAGE = "data:image/svg+xml;utf8," + quote(
     "<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'>"
     "<rect width='100%' height='100%' rx='10' fill='#1e293b'/>"
@@ -26,6 +31,7 @@ PLACEHOLDER_IMAGE = "data:image/svg+xml;utf8," + quote(
     "</svg>"
 )
 
+# Global CSS: gives Streamlit widgets and custom cards the dark professional theme.
 st.markdown(
     """
     <style>
@@ -123,7 +129,10 @@ st.markdown(
 
 @st.cache_data(show_spinner=False)
 def load_data(path: Path) -> pd.DataFrame:
+    """Load the product CSV once and prepare display-friendly numeric fields."""
     data = pd.read_csv(path).reset_index(drop=True)
+    # Prices and rating counts were log-transformed during feature engineering.
+    # Convert them back only for readable UI display; the model keeps its own data.
     for column in ("discount_price", "actual_price", "no_of_ratings"):
         if column in data:
             data[f"{column}_display"] = np.expm1(data[column]).clip(lower=0)
@@ -134,10 +143,12 @@ def load_data(path: Path) -> pd.DataFrame:
 
 @st.cache_resource(show_spinner=False)
 def load_model(path: Path):
+    """Load and cache the trained KNN model to avoid reloading it on every rerun."""
     return joblib.load(path)
 
 
 def format_price(value) -> str:
+    """Format a numeric price as Indian Rupees, handling missing values safely."""
     return "—" if pd.isna(value) else f"₹{value:,.0f}"
 
 
@@ -174,25 +185,32 @@ def product_tile_html(product: pd.Series) -> str:
 
 
 def recommendations(data: pd.DataFrame, model, seed_index: int, count: int) -> pd.DataFrame:
+    """Query the KNN model and return the requested number of similar products."""
+    # The fitted model contains the hybrid matrix, so no duplicate feature file
+    # needs to be loaded into memory.
     matrix = model._fit_X
     if len(data) != matrix.shape[0]:
         raise ValueError("The dataset and model were created from different product lists.")
 
+    # Query nearest neighbours using the vector for the chosen product.
     seed_vector = matrix[seed_index]
     if getattr(seed_vector, "ndim", 2) == 1:
         seed_vector = seed_vector.reshape(1, -1)
     distances, indices = model.kneighbors(seed_vector, n_neighbors=min(count + 1, len(data)))
 
+    # Remove the selected product itself and convert cosine distance to a score.
     mask = indices[0] != seed_index
     result = data.iloc[indices[0][mask][:count]].copy()
     result["score"] = np.clip(1 - distances[0][mask][:count], 0, 1)
     return result
 
 
+# Validate required files before trying to read the large dataset/model.
 if not DATA_PATH.exists() or not MODEL_PATH.exists():
     st.error("Required dataset or model file is missing.")
     st.stop()
 
+# Load the large dataset and model. Streamlit caching avoids repeating this work.
 with st.spinner("Loading product catalog and recommendation model..."):
     df = load_data(DATA_PATH)
     knn_model = load_model(MODEL_PATH)
@@ -201,9 +219,11 @@ if not hasattr(knn_model, "_fit_X"):
     st.error("The saved KNN model is incomplete. Export it again from the training notebook.")
     st.stop()
 
+# Session state remembers the active page after every widget interaction reruns the app.
 if "simple_page" not in st.session_state:
     st.session_state.simple_page = "Home"
 
+# Sidebar navigation: each button selects a page and then reruns the interface.
 with st.sidebar:
     st.markdown(
         """
@@ -230,8 +250,10 @@ with st.sidebar:
             st.session_state.simple_page = item
             st.rerun()
 
+# Read the active page selected by the sidebar navigation buttons.
 page = st.session_state.simple_page
 
+# ------------------------------- HOME PAGE ---------------------------------
 if page == "Home":
     hero_text, hero_visual = st.columns([1.35, 0.65])
     with hero_text:
@@ -280,6 +302,7 @@ if page == "Home":
             )
     st.stop()
 
+# ----------------------------- PROJECT PAGE --------------------------------
 if page == "Project":
     project_text, project_visual = st.columns([1.25, 0.75])
     with project_text:
@@ -321,6 +344,8 @@ if page == "Project":
     )
     st.stop()
 
+# ------------------------- RECOMMENDATIONS PAGE ----------------------------
+# The remaining code runs only when the Recommendations page is selected.
 st.markdown(
     """
     <div class="catalog-hero">
@@ -334,6 +359,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Let the user narrow the product catalog by category and name.
 filter_col, search_col = st.columns([1, 2])
 with filter_col:
     categories = ["All categories"] + sorted(df["main_category"].dropna().unique().tolist())
@@ -341,8 +367,10 @@ with filter_col:
 with search_col:
     query = st.text_input("Search products", placeholder="Type at least 2 letters to search")
 
+# Apply the optional category filter before building the product dropdown.
 catalog = df if selected_category == "All categories" else df[df["main_category"] == selected_category]
 
+# Keep the dropdown fast: show popular products by default, or up to 500 search matches.
 if len(query.strip()) < 2:
     candidates = catalog.nlargest(500, "no_of_ratings_display")
     helper = "Showing 500 popular products. Type at least 2 letters to search."
@@ -356,6 +384,7 @@ if candidates.empty:
     st.info("No products found. Try a shorter search.")
     st.stop()
 
+# Store row indices in the dropdown; the index is also the matching model row.
 options = candidates.index.tolist()
 selected_index = st.selectbox(
     "Select a product",
@@ -371,11 +400,13 @@ number = st.slider(
     help="Choose how many similar products to display, then click Get recommendations.",
 )
 
+# Run model inference only when the user clicks the action button.
 if st.button("Get recommendations", type="primary"):
     with st.spinner("Finding similar products..."):
         st.session_state["simple_recommendations"] = recommendations(df, knn_model, selected_index, number)
         st.session_state["simple_request"] = (selected_index, number)
 
+# Render results only when they belong to the currently selected product and count.
 result = st.session_state.get("simple_recommendations")
 if result is not None and st.session_state.get("simple_request") == (selected_index, number):
     st.markdown(f"### Recommended products ({len(result)})")
@@ -384,23 +415,3 @@ if result is not None and st.session_state.get("simple_request") == (selected_in
         for column, (_, product) in zip(columns, result.iloc[start : start + 3].iterrows()):
             with column:
                 st.markdown(product_tile_html(product), unsafe_allow_html=True)
-
-    # Kept temporarily only to avoid removing the earlier layout during a live
-    # Streamlit rerun; the marketplace cards above are the active display.
-    if False:
-        '''
-        for _, product in result.iterrows():
-        image, details = st.columns([1, 7])
-        with image:
-            st.markdown(product_image_html(product.get("image", "")), unsafe_allow_html=True)
-        with details:
-            name = html.escape(str(product["name"]))
-            category = html.escape(str(product.get("sub_category", product.get("main_category", ""))).title())
-            price = product.get("discount_price_display", np.nan)
-            st.markdown(
-                f'<div class="card"><div class="product-name">{name}</div>'
-                f'<div class="meta">{category} · {product["ratings"]:.1f} rating · {format_price(price)}</div>'
-                f'<div class="score">Similarity {product["score"] * 100:.1f}%</div></div>',
-                unsafe_allow_html=True,
-            )
-        '''
