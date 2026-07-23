@@ -236,9 +236,9 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
     nav_labels = {
-        "Home": "⌂  Home",
-        "Recommendations": "✦  Recommendations",
-        "Project": "◇  Project",
+        "Home": "⌂ Home",
+        "Recommendations":"✦Recommendations",
+        "Project":"◇About",
     }
     for item in ("Home", "Recommendations", "Project"):
         if st.button(
@@ -261,7 +261,7 @@ if page == "Home":
             """
             <div class="home-hero">
                 <div class="eyebrow">HYBRID · CONTENT-BASED · COSINE KNN</div>
-                <h1>Product recommendations built from what items <em>are</em>, not just what people clicked.</h1>
+                <h1>Product recommendations built from what items are , not just what people clicked.</h1>
                 <p>This recommender combines product names and categories with price, popularity, and rating signals
                 in one hybrid vector, then finds the nearest products across the complete catalog.</p>
             </div>
@@ -311,7 +311,7 @@ if page == "Project":
             <div class="home-hero">
                 <div class="eyebrow">ABOUT THIS PROJECT</div>
                 <h1>A faster way to explore a large product catalog.</h1>
-                <p>This portfolio project demonstrates how machine learning can make product discovery more useful when shoppers do not know exactly what to search for.</p>
+                <p>This project demonstrates how machine learning can make product discovery more useful when shoppers do not know exactly what to search for.</p>
             </div>
             """,
             unsafe_allow_html=True,
@@ -323,9 +323,9 @@ if page == "Project":
     with left:
         st.markdown("### What this app helps with")
         st.markdown(
-            '<div class="card"><div class="project-list"><b>Product discovery:</b> find alternatives to an item you already like<br>'
-            '<b>Comparison:</b> identify similar products across a large catalog<br>'
-            '<b>Exploration:</b> browse by category before narrowing a search</div></div>',
+            '<div class="card"><div class="project-list"><b>Product discovery:</b> You can find alternatives to an item you already like.<br>'
+            '<b>Comparison:</b> It can identify similar products across a large catalog.<br>'
+            '<b>Exploration:</b> You can filter by category first to find your specific item.</div></div>',
             unsafe_allow_html=True,
         )
     with right:
@@ -338,9 +338,10 @@ if page == "Project":
         )
     st.markdown("### Design considerations")
     st.write(
-        "The app is intentionally designed as a decision-support tool, not a purchasing system. Similarity scores "
-        "indicate how close two products are in the model's feature space; they do not guarantee availability, "
-        "current price, product quality, or personal suitability."
+        "This Streamlit app is a prototype built to showcase how the recommendation system works." \
+        "It is a decision-support tool, not an e-commerce shop. " \
+        "The similarity scores simply show how close items are in the model's data. " \
+        "They do not guarantee that the products are available, accurately priced, or high quality."
     )
     st.stop()
 
