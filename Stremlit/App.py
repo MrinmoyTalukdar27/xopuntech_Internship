@@ -1,3 +1,4 @@
+# this is the basic stremlit app'
 """A compact Streamlit interface for the Amazon product recommender."""
 
 # Standard-library helpers for file paths, safe HTML, and SVG image encoding.
