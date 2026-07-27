@@ -36,82 +36,88 @@ PLACEHOLDER_IMAGE = "data:image/svg+xml;utf8," + quote(
 st.markdown(
     """
     <style>
-        .stApp { background: #0b1220; color: #e5e7eb; }
+        .stApp { background: radial-gradient(circle at 15% 10%, #145957 0%, transparent 28%),
+                          radial-gradient(circle at 85% 82%, #0b4c48 0%, transparent 30%), #071c1d;
+                 color: #e5e7eb; }
         .block-container { max-width: 1120px; padding: 2.4rem 2.4rem 3rem; margin-top: 1.5rem;
-                           margin-bottom: 1.5rem; background: #0d1728; border: 1px solid #243047;
-                           border-radius: 18px; box-shadow: 0 18px 45px rgba(0, 0, 0, .20); }
+                           margin-bottom: 1.5rem; background: rgba(10, 36, 37, .72); border: 1px solid rgba(134, 239, 225, .20);
+                           border-radius: 18px; box-shadow: 0 18px 45px rgba(0, 0, 0, .28); backdrop-filter: blur(18px); }
         h1, h2, h3, p, label, [data-testid="stCaptionContainer"] { color: #e5e7eb !important; }
         [data-testid="stTextInput"] input, [data-testid="stSelectbox"] > div > div {
-            background: #111c30 !important; color: #f8fafc !important;
-            border-color: #334155 !important;
+            background: rgba(16, 48, 49, .78) !important; color: #f8fafc !important;
+            border-color: rgba(134, 239, 225, .28) !important; backdrop-filter: blur(12px);
         }
         [data-testid="stTextInput"] input::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
         [data-baseweb="select"] * { color: #f8fafc !important; }
         .stButton > button {
-            background: #2563eb; color: white; border: 0; border-radius: 8px;
+            background: #0f9f92; color: white; border: 0; border-radius: 8px;
             font-weight: 600; padding: 0.55rem 1.2rem;
         }
-        .stButton > button:hover { background: #1d4ed8; color: white; }
-        .hero { border-bottom: 1px solid #243047; padding-bottom: 1.5rem; margin-bottom: 1.6rem; }
-        .eyebrow { color: #60a5fa; font-size: .75rem; font-weight: 700; letter-spacing: .12em; }
-        .card { background: #111c30; border: 1px solid #243047; border-radius: 12px; padding: 1rem; }
+        .stButton > button:hover { background: #0b8076; color: white; }
+        .hero { border-bottom: 1px solid #245051; padding-bottom: 1.5rem; margin-bottom: 1.6rem; }
+        .eyebrow { color: #5eead4; font-size: .75rem; font-weight: 700; letter-spacing: .12em; }
+        .card { background: rgba(13, 41, 41, .70); border: 1px solid rgba(134, 239, 225, .18); border-radius: 12px;
+                padding: 1rem; backdrop-filter: blur(14px); }
         .product-name { color: #f8fafc; font-weight: 700; font-size: 1rem; }
-        .meta { color: #94a3b8; font-size: .85rem; }
-        .score { color: #60a5fa; font-weight: 700; font-size: .85rem; }
+        .meta { color: #91b8b6; font-size: .85rem; }
+        .score { color: #5eead4; font-weight: 700; font-size: .85rem; }
         .image-frame { width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; }
         .image-frame img { max-width: 96px; max-height: 96px; object-fit: contain; border-radius: 10px; }
-        .stat { background: #111c30; border: 1px solid #243047; border-radius: 12px; padding: 1rem; }
-        .stat-label { color: #94a3b8; font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; }
+        .stat { background: rgba(13, 41, 41, .70); border: 1px solid rgba(134, 239, 225, .18); border-radius: 12px;
+                padding: 1rem; backdrop-filter: blur(14px); }
+        .stat-label { color: #91b8b6; font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; }
         .stat-value { color: #f8fafc; font-weight: 700; font-size: 1.55rem; margin-top: .25rem; }
-        .home-hero { background: linear-gradient(125deg, #10192c 0%, #182a51 55%, #3730a3 100%);
-                     border: 1px solid #293b65; border-radius: 20px; padding: 3rem; margin: .6rem 0 1.8rem; }
+        .home-hero { background: linear-gradient(125deg, rgba(9, 35, 36, .78) 0%, rgba(14, 71, 69, .70) 55%, rgba(15, 118, 110, .62) 100%);
+                     border: 1px solid rgba(153, 246, 228, .25); border-radius: 20px; padding: 3rem; margin: .6rem 0 1.8rem;
+                     backdrop-filter: blur(18px); }
         .home-hero h1 { font-size: 2.7rem; line-height: 1.18; max-width: 850px; margin: .55rem 0 1.2rem; }
         .home-hero p { color: #cbd5e1 !important; max-width: 760px; font-size: 1.05rem; line-height: 1.7; }
-        [data-testid="stImage"] img { border: 1px solid #293b65; border-radius: 20px; }
-        .chip { display: inline-block; color: #93c5fd; background: #172554; border: 1px solid #334f83;
+        [data-testid="stImage"] img { border: 1px solid #2b6864; border-radius: 20px; }
+        .chip { display: inline-block; color: #99f6e4; background: #123c3b; border: 1px solid #2b6864;
                 border-radius: 99px; padding: .28rem .65rem; font-size: .8rem; margin: .2rem .35rem .2rem 0; }
         .step-title { color: #f8fafc; font-weight: 700; margin-bottom: .45rem; }
-        .step-copy { color: #94a3b8; font-size: .88rem; line-height: 1.5; }
-        .catalog-hero { background: linear-gradient(90deg, rgba(17, 28, 48, .98) 0%, rgba(17, 28, 48, .90) 48%,
-                              rgba(17, 28, 48, .42) 100%),
-                              url("/app/static/recommendations-header-background.png") right center / 52% auto no-repeat, #111c30;
-                        border: 1px solid #243047; border-radius: 16px;
+        .step-copy { color: #91b8b6; font-size: .88rem; line-height: 1.5; }
+        .catalog-hero { background: linear-gradient(90deg, rgba(7, 28, 29, .96) 0%, rgba(10, 51, 50, .86) 48%,
+                              rgba(13, 94, 87, .48) 100%),
+                              url("/app/static/recommendations-header-background.png") right center / 52% auto no-repeat, #0d2929;
+                        border: 1px solid rgba(134, 239, 225, .20); border-radius: 16px;
                         padding: 1.5rem 2rem; margin: .6rem 0 1.4rem; display: flex;
                         align-items: center; justify-content: space-between; gap: 1.5rem; }
         .catalog-hero h1 { margin: .35rem 0; font-size: 2rem; }
         .catalog-copy { flex: 1; }
-        .product-tile { background: #111c30; border: 1px solid #243047; border-radius: 12px;
-                        overflow: hidden; min-height: 365px; margin-bottom: 1rem; }
-        .product-tile:hover { border-color: #3b82f6; }
+        .product-tile { background: rgba(13, 41, 41, .72); border: 1px solid rgba(134, 239, 225, .18); border-radius: 12px;
+                        overflow: hidden; min-height: 365px; margin-bottom: 1rem; backdrop-filter: blur(14px); }
+        .product-tile:hover { border-color: #2dd4bf; }
         .product-tile-image { height: 175px; display: flex; justify-content: center; align-items: center;
-                              background: #0f172a; padding: .75rem; }
+                              background: #082021; padding: .75rem; }
         .product-tile-image img { max-height: 155px; max-width: 100%; object-fit: contain; }
         .product-tile-body { padding: 1rem; }
         .product-tile-name { color: #f8fafc; font-weight: 700; line-height: 1.4; height: 4.2em; overflow: hidden; }
-        .product-tile-category { color: #94a3b8; font-size: .78rem; margin: .45rem 0; }
+        .product-tile-category { color: #91b8b6; font-size: .78rem; margin: .45rem 0; }
         .product-tile-price { color: #f8fafc; font-size: 1.05rem; font-weight: 700; margin-top: .5rem; }
         .product-tile-rating { color: #fbbf24; font-size: .85rem; }
-        .product-tile-score { color: #60a5fa; font-size: .82rem; font-weight: 700; margin-top: .45rem; }
-        .project-list { color: #cbd5e1; line-height: 1.75; }
+        .product-tile-score { color: #5eead4; font-size: .82rem; font-weight: 700; margin-top: .45rem; }
+        .project-list { color: #b9d7d4; line-height: 1.75; }
         .project-list b { color: #f8fafc; }
         .section-label { color: #f8fafc; font-size: 1.35rem; font-weight: 700; margin: 2.1rem 0 1rem; }
-        .section-badge { color: #a5b4fc; background: #1e1b4b; border-radius: 999px; padding: .25rem .65rem;
+        .section-badge { color: #99f6e4; background: #123c3b; border-radius: 999px; padding: .25rem .65rem;
                          font-size: .78rem; margin-left: .5rem; vertical-align: middle; }
-        .pipeline-number { color: #818cf8; font-size: .8rem; font-weight: 700; }
-        section[data-testid="stSidebar"] { border-right: 1px solid #243047; }
+        .pipeline-number { color: #5eead4; font-size: .8rem; font-weight: 700; }
+        section[data-testid="stSidebar"] { border-right: 1px solid rgba(134, 239, 225, .18); }
         section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
-            background: linear-gradient(rgba(7, 14, 28, .88), rgba(7, 14, 28, .95)),
+            background: linear-gradient(rgba(4, 29, 29, .72), rgba(4, 29, 29, .84)),
                         url("/app/static/navigation-sidebar-background.png") center / cover no-repeat;
         }
-        section[data-testid="stSidebar"] .stButton > button { background: #111c30; border: 1px solid #243047;
+        section[data-testid="stSidebar"] .stButton > button { background: rgba(13, 41, 41, .62); border: 1px solid rgba(134, 239, 225, .18);
             color: #cbd5e1; text-align: left; width: 100%; margin-bottom: .35rem; padding: .6rem .75rem;
-            font-size: .88rem; white-space: nowrap; }
-        section[data-testid="stSidebar"] .stButton > button:hover { background: #172554; border-color: #3b82f6; }
-        section[data-testid="stSidebar"] .stButton > button[kind="primary"] { background: #2563eb; color: #ffffff; }
-        .side-brand { padding: .8rem .15rem 1.5rem; border-bottom: 1px solid #243047; margin-bottom: 1.2rem; }
+            font-size: .88rem; white-space: nowrap; backdrop-filter: blur(12px); }
+        section[data-testid="stSidebar"] .stButton > button:hover { background: rgba(18, 66, 64, .78); border-color: #2dd4bf; }
+        section[data-testid="stSidebar"] .stButton > button[kind="primary"] { background: #0f9f92; color: #ffffff; }
+        .side-brand { padding: .8rem .15rem 1.5rem; border-bottom: 1px solid #245051; margin-bottom: 1.2rem; }
         .side-brand-title { color: #f8fafc; font-weight: 700; font-size: 1.1rem; }
         .side-brand-sub { color: #94a3b8; font-size: .75rem; margin-top: .2rem; }
-        header[data-testid="stHeader"] { background: #0b1220 !important; border-bottom: 1px solid #243047; }
+        header[data-testid="stHeader"] { background: rgba(7, 28, 29, .78) !important; border-bottom: 1px solid rgba(134, 239, 225, .18);
+                                        backdrop-filter: blur(16px); }
         [data-testid="stSidebarCollapsedControl"], header[data-testid="stHeader"] button {
             background: #38bdf8 !important; border: 1px solid #7dd3fc !important; border-radius: 9px !important;
             min-width: 42px !important; min-height: 42px !important; margin: .35rem !important;
