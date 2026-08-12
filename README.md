@@ -1,4 +1,4 @@
-# # 🛍️ Hybrid Amazon Product Recommendation System
+## 🛍️ Hybrid Amazon Product Recommendation System
 
 A content-based **product recommendation engine** that suggests similar Amazon products by blending **Natural Language Processing (NLP)** with classic **Machine Learning**. Built end-to-end — from raw data to a deployed Streamlit app.
 
