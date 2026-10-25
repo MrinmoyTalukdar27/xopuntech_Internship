@@ -14,7 +14,6 @@ import streamlit as st
 
 
 st.set_page_config(page_title="Product Recommender", page_icon="◆", layout="wide")
-
 # Resolve all project paths from this file, so the app works no matter where the
 # `streamlit run` command is issued from.
 APP_DIR = Path(__file__).resolve().parent
