@@ -1,4 +1,4 @@
-# # 🛍️ Hybrid Amazon Product Recommendation System
+## 🛍️ Hybrid Amazon Product Recommendation System
 
 A content-based **product recommendation engine** that suggests similar Amazon products by blending **Natural Language Processing (NLP)** with classic **Machine Learning**. Built end-to-end — from raw data to a deployed Streamlit app.
 
@@ -21,12 +21,12 @@ The project follows a full ML workflow: **Data Cleaning → EDA → Feature Engi
 
 ## 🚀 Key Features
 
-- 🔍 Search and recommend similar Amazon products
-- 🤖 Hybrid recommendation combining NLP + numerical features
-- 🧠 Semantic understanding via Sentence Transformer embeddings
-- ⚡ Fast, similarity-based recommendations using KNN + Cosine Similarity
-- 🖼️ Product images and direct Amazon links shown in results
-- 💻 Clean, interactive Streamlit web interface
+-  Search and recommend similar Amazon products
+-  Hybrid recommendation combining NLP + numerical features
+-  Semantic understanding via Sentence Transformer embeddings
+-  Fast, similarity-based recommendations using KNN + Cosine Similarity
+-  Product images and direct Amazon links shown in results
+-  Clean, interactive Streamlit web interface
 
 ---
 
@@ -97,7 +97,7 @@ streamlit run App.py
 
 This will launch the app in your browser, where you can search for a product and view a ranked list of similar recommendations along with images and Amazon links.
 
-If you want to explore or reproduce the pipeline itself, run the notebooks in this order:
+If you want to explore or reproduce the pipeline itself, run the notebooks in this order:-
 
 1. `notebooks/Data_cleaning.ipynb`
 2. `notebooks/EDA.ipynb`
